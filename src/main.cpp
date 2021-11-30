@@ -17,12 +17,12 @@ void setup()
   Serial.begin(115200);
   delay(3000);
 
-  xTaskCreate(task_imu_data,
-              "Data Acq.",
-              1024,
-              NULL,
-              1,
-              NULL);
+  // xTaskCreate(task_imu_data,
+  //             "Data Acq.",
+  //             1024,
+  //             NULL,
+  //             1,
+  //             NULL);
 }
 
 void loop() {

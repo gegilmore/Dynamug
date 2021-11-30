@@ -19,6 +19,8 @@ void task_fft(void* newgxdata, void* newgydata)
             gx[index] = imu_queue_gx.get();
             gy[index] = imu_queue_gy.get();
 
+            
+
             complex *gx = new complex[1024];
             complex *gy = new complex[1024];
 

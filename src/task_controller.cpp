@@ -6,13 +6,17 @@
 #include <shares.h>
 #include <task_controller.h>
 
-void task_controller(void* gxdata, void* gydata);
+void task_controller(void* gxdata, void* gydata)
 {
     for(;;)
     {
-        if(gxdata[0] > 1000 || gxdata[0] < 1000) 
+        int16_t gx = imu_share_gx.get();
+        int16_t gy = imu_share_gy.get();
+
+        if(gx > 1000 || gx < 1000) 
         {
-            data_share.put(*gxdata);
+
+            
 
         }
     }

@@ -37,6 +37,9 @@ THE SOFTWARE.
 */
 
 #include "MPU6050.h"
+#include <fft.h>
+#include <complex.h>
+#include <I2Cdev.h>
 
 /** Specific address constructor.
  * @param address I2C address, uses default I2C address if none is specified
@@ -1913,10 +1916,36 @@ int16_t MPU6050_Base::getTemperature() {
  */
 void MPU6050_Base::getRotation(int16_t* x, int16_t* y, int16_t* z) {
     I2Cdev::readBytes(devAddr, MPU6050_RA_GYRO_XOUT_H, 6, buffer, I2Cdev::readTimeout, wireObj);
+    complex *pSignalx = new complex[1024];
     *x = (((int16_t)buffer[0]) << 8) | buffer[1];
     *y = (((int16_t)buffer[2]) << 8) | buffer[3];
     *z = (((int16_t)buffer[4]) << 8) | buffer[5];
 }
+
+void MPU6050_Base::getRotationfft(int16_t x, int16_t y, int16_t z) {
+    I2Cdev::readBytes(devAddr, MPU6050_RA_GYRO_XOUT_H, 6, buffer, I2Cdev::readTimeout, wireObj);
+    complex *pSignalx = new complex[1024];
+    complex *pSignaly = new complex[1024];
+    complex *pSignalz = new complex[1024];
+
+    for (uint8_t index = 0; index < 1024; index++)
+    {
+        pSignalx[index] = (((int16_t)buffer[0]) << 8) | buffer[1];
+        pSignaly[index] = (((int16_t)buffer[2]) << 8) | buffer[3];
+        pSignalz[index] = (((int16_t)buffer[4]) << 8) | buffer[5];
+    }
+
+    CFFT::Forward(pSignalx, 1024);
+    CFFT::Forward(pSignaly, 1024);
+    CFFT::Forward(pSignalz, 1024);
+
+   
+    x = pSignalx->re();
+    y = pSignaly->re();
+    z = pSignalz->re();
+
+}
+
 /** Get X-axis gyroscope reading.
  * @return X-axis rotation measurement in 16-bit 2's complement format
  * @see getMotion6()
