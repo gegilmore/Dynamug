@@ -13,25 +13,16 @@ void task_imu_data(void* gxdata, void* gydata)
 {
     for (;;)
     {
-        mpu.getRotation(&gx, &gy, &gz);
+        // Obtain x and y gyro data
+        mpu.getRotationX();
+        mpu.getRotationY();
 
-        if (gx > 1000 || gx < -1000)    // Arbitrary condition. Need to somehow determine when data should be put share vs. queue
-        {
-            imu_share_gx.put(gx);
-        }
-        else
-        {
-            imu_queue_gx.put(gx);
-        }
-        
-        if (gx > 1000 || gx < -1000)
-        {
-            imu_share_gy.put(gy);
-        }
-        else
-        {
-            imu_queue_gy.put(gy);
-        }
-        
+        // Put gyro data for x and y into shared variable
+        imu_share_gx.put(gx);
+        imu_share_gy.put(gy);
+
+        // Put gyro data for x and y into queues
+        imu_queue_gx.put(gx);
+        imu_queue_gy.put(gy);
     }
 }
