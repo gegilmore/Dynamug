@@ -18,10 +18,15 @@ Motor::Motor(byte in_pin, uint16_t fwd_sig, uint16_t Reverse, uint16_t stop)
 	(esc->AUTO_RLD) = autoRld; //1920000
 	(esc->PER) = per; //1.0/50
 
+
 }
 
 void Motor::updateMotor(uint16_t throttle)
 {
+	uint16_t finalmicro = 0;
+	
+	Servo servo;
+    servo.attach(Motor -> SERVO_PIN);
 
 	if( throttle > -100 || throttle < 100 ) 
     {
@@ -42,6 +47,7 @@ void Motor::updateMotor(uint16_t throttle)
 
  	//printf("The duty cycle is: %d\n", throttle_Sig);
 
+	servo.writeMicroseconds(finalmicro);
     
 
 	esc->THROTTLE_SIG = throttle_Sig; //example line of code to set throttle
