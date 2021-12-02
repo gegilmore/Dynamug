@@ -21,7 +21,7 @@ void task_imu_data_x(void* imu_data_x)
     for (;;)
     {
         // Obtain x and y gyro data
-        //mpu.getRotationX();
+        imu_queue_raw_x.put(mpu.getRotationX());
         //mpu.getRotationY();
         mpu.dmpGetQuaternion(&q, fifoBuffer);
         mpu.dmpGetEuler(euler, &q);
@@ -33,6 +33,7 @@ void task_imu_data_x(void* imu_data_x)
 
         // Put gyro data for x and y into queues
         imu_queue_gx.put(euler[0]);
+
 
         vTaskDelay(10);
     }

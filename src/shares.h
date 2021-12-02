@@ -18,4 +18,9 @@ extern Queue<float> imu_queue_gy (256, "gy Data");
 extern Queue<float> omega_queue_x (256, "Omega x");
 extern Queue<float> omega_queue_y (256, "Omega x");
 
+extern Queue<float> imu_queue_raw_x (4, "Raw x data");
+extern Queue<float> imu_queue_raw_y (4, "Raw y data");
+
+extern Share<float> imu_share_raw_x ("fast x Data");
+
 #endif
