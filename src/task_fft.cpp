@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include <task_imu_data.h>
+#include <task_imu_data_x.h>
 #include <I2Cdev.h>
 #include <MPU6050.h>
 #include <STM32FreeRTOS.h>
@@ -7,26 +7,33 @@
 #include <fft.h>
 #include <shares.h>
 
-int16_t gx[1024], gy[1024];
+const uint16_t queue_size = 256;
+int16_t gx[queue_size], gy[queue_size];
 
-void task_fft(void* newgxdata, void* newgydata)
+void task_fft(void* newgxdata)
 {
 
     for(;;) 
     {
-        for (uint16_t index = 0; index < 1024; index++)
+        // Getting x and y gyro data in the queue
+        *gx = omega_queue_x.get();
+
+        // Creating a new empty complex array for FFT
+        complex *gxfft = new complex[queue_size];
+
+        // Fill the complex arrays with imu data
+        for (uint8_t index = 0; index < queue_size; index++)
         {
-            gx[index] = imu_queue_gx.get();
-            gy[index] = imu_queue_gy.get();
-
-            
-
-            complex *gx = new complex[1024];
-            complex *gy = new complex[1024];
-
-            CFFT::Forward(gx, 1024);
-            CFFT::Forward(gy, 1024);
+            gxfft[index] = gx[index];
         }
+
+        //Performing forward FFT on x and y gyro data
+        CFFT::Forward(gxfft, queue_size);
+
+        // Getting real values
+        int16_t gxnewre = gxfft->re();
+
+        fft_share_gx.put(gxnewre);
     }
         
 }
