@@ -8,10 +8,10 @@ Motor::Motor(byte in_pin, uint16_t fwd_sig, uint16_t Reverse, uint16_t stop)
  {
     Servo SERVO;
     SERVO.attach(in_pin);
-    Motor->SERVO_PIN = in_pin;
-    Motor->FWD_SIG = fwd_sig;
-    Motor->REV_SIG = Reverse;
-    Motor->STOP_SIG = stop;
+    SERVO_PIN = in_pin;
+    FWD_SIG = fwd_sig;
+    REV_SIG = Reverse;
+    STOP_SIG = stop;
 
 	
 
@@ -21,9 +21,7 @@ Motor::Motor(byte in_pin, uint16_t fwd_sig, uint16_t Reverse, uint16_t stop)
 void Motor::updateMotor(uint16_t throttle)
 {
 	uint16_t finalmicro = 0;
-	
-	Servo servo;
-    servo.attach(Motor -> SERVO_PIN);
+    SERVO.attach(SERVO_PIN);
 
 	if( throttle > -100 || throttle < 100 ) 
     {
@@ -32,27 +30,27 @@ void Motor::updateMotor(uint16_t throttle)
     else if( throttle < -100 ) 
     {
  			throttle = -100;
-			finalmicro = Motor->REV_SIG;
+			finalmicro = REV_SIG;
  	}	
     else if( throttle > 100) 
     {
  			throttle = 100;
-			finalmicro = Motor->FWD_SIG;
+			finalmicro = FWD_SIG;
  	}
 	else if( throttle > 0) 
     {
 			
-			finalmicro = (Motor->FWD_SIG - Motor->STOP_SIG)*(throttle/100) + Motor->STOP_SIG);
+			finalmicro = (FWD_SIG - STOP_SIG)*(throttle/100) + STOP_SIG);
  	}
 	else if( throttle < 0) 
     {
 			
-			finalmicro = (( Motor->STOP_SIG - Motor->REV_SIG)*(throttle/100) + Motor->REV_SIG);
+			finalmicro = (( STOP_SIG - REV_SIG)*(throttle/100) + REV_SIG);
  	}
 	 else if( throttle = 0) 
     {
 			
-			finalmicro = Motor->STOP_SIG;
+			finalmicro = STOP_SIG;
  	}	
     else  
     {
