@@ -4,6 +4,6 @@
 #ifndef _TASK_CONTROLLER_
 #define _TASK_CONTROLLER_
 
-void task_controller(void* gxdata, void* gydata);
+void task_controller_y(void* gydata);
 
 #endif
