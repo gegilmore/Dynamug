@@ -4,22 +4,22 @@
 #include <Servo.h>
 #include <Motor.h>
 
-Servo servo1;
+
 
 // Need to figure out how fast the motor should turn in each direction
 void task_motor_1 (void* data)
 {
-
+    Motor motor1;
+    motor1.initialize(D6, 1900, 1100, 1500);
+    float data;
     for (;;)
     {
         // Get fundamental frequency
-        uint8_t hz = fft_share_gx.get();
-
-        // Turn frequency into ms
-        uint16_t x = 1000/hz;
+        data = imu_queue_raw_x.get();
+        motor1.updateMotor(10);
 
         // Motor will change direction at equal speed every x ms
-        vTaskDelay(x);
+        //vTaskDelay(x);
 
 
     }
